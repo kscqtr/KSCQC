@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calibration Information</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        .info {
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Calibration Information</h1>
+    <div class="info">
+        <strong>Last Calibration Date:</strong> <span id="calibration-date">2024-10-01</span>
+    </div>
+    <div class="info">
+        <strong>Next Calibration Due:</strong> <span id="next-calibration-date">2025-10-01</span>
+    </div>
+    <script>
+        function fetchData() {
+            // Simulated data fetching; replace with actual logic if needed
+            const calibrationDate = "2024-10-01"; // This would come from your source
+            const nextCalibrationDate = "2025-10-01"; // This too
+
+            document.getElementById('calibration-date').innerText = calibrationDate;
+            document.getElementById('next-calibration-date').innerText = nextCalibrationDate;
+        }
+
+        window.onload = fetchData;
+    </script>
+</body>
+</html>
