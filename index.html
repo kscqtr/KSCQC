@@ -17,7 +17,7 @@
             .then(data => {
                 const workbook = XLSX.read(data, { type: 'array' });
                 const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
-                const cellValue = firstSheet['A1'].v; // Change 'A1' to your desired cell
+                const cellValue = firstSheet['E3'].v; // Change 'A1' to your desired cell
                 document.getElementById('result').innerText = cellValue;
             })
             .catch(error => console.error('Error loading file:', error));
