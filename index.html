@@ -3,82 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calibration Information</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-        h1 {
-            color: #333;
-        }
-        .tab {
-            display: none; /* Hide all tabs by default */
-        }
-        .tab-button {
-            padding: 10px 20px;
-            cursor: pointer;
-            border: none;
-            background-color: #f1f1f1;
-            margin-right: 5px;
-            transition: background-color 0.3s;
-        }
-        .tab-button.active {
-            background-color: #007bff; /* Active tab color */
-            color: white;
-        }
-        .active {
-            display: block; /* Show active tab */
-        }
-    </style>
+    <title>Excel Data Display</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
 </head>
 <body>
-    <h1>Calibration Information</h1>
-    
-    <div>
-        <button class="tab-button active" onclick="openTab('tab1')">Calibration Info</button>
-        <button class="tab-button" onclick="openTab('tab2')">Another Tab</button>
-    </div>
-
-    <div id="tab1" class="tab active">
-        <div class="info">
-            <strong>Last Calibration Date:</strong> <span id="calibration-date">2024-10-01</span>
-        </div>
-        <div class="info">
-            <strong>Next Calibration Due:</strong> <span id="next-calibration-date">2025-10-01</span>
-        </div>
-    </div>
-
-    <div id="tab2" class="tab">
-        <h2>Content for Another Tab</h2>
-        <p>This is where you can put additional information or features.</p>
-    </div>
-
+    <h1>Excel Data</h1>
+    <div id="result"></div>
     <script>
-        function fetchData() {
-            const calibrationDate = "2024-10-01"; // Simulated data
-            const nextCalibrationDate = "2025-10-01"; // Simulated data
+        const filePath = 'https://github.com/JohnDen2/JohnDen2.github.io/raw/refs/heads/main/1)%20Equipment%20master%20list%2020240820.xlsx'; // Path to your uploaded Excel file
 
-            document.getElementById('calibration-date').innerText = calibrationDate;
-            document.getElementById('next-calibration-date').innerText = nextCalibrationDate;
-        }
-
-        function openTab(tabId) {
-            const tabs = document.querySelectorAll('.tab');
-            const buttons = document.querySelectorAll('.tab-button');
-
-            tabs.forEach(tab => {
-                tab.classList.remove('active'); // Hide all tabs
-            });
-            buttons.forEach(button => {
-                button.classList.remove('active'); // Remove active class from all buttons
-            });
-
-            document.getElementById(tabId).classList.add('active'); // Show the selected tab
-            event.currentTarget.classList.add('active'); // Highlight the active button
-        }
-
-        window.onload = fetchData;
+        fetch(filePath)
+            .then(response => response.arrayBuffer())
+            .then(data => {
+                const workbook = XLSX.read(data, { type: 'array' });
+                const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+                const cellValue = firstSheet['A1'].v; // Change 'A1' to your desired cell
+                document.getElementById('result').innerText = cellValue;
+            })
+            .catch(error => console.error('Error loading file:', error));
     </script>
 </body>
 </html>
