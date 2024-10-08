@@ -12,27 +12,70 @@
         h1 {
             color: #333;
         }
-        .info {
-            margin: 10px 0;
+        .tab {
+            display: none; /* Hide all tabs by default */
+        }
+        .tab-button {
+            padding: 10px 20px;
+            cursor: pointer;
+            border: none;
+            background-color: #f1f1f1;
+            margin-right: 5px;
+            transition: background-color 0.3s;
+        }
+        .tab-button.active {
+            background-color: #007bff; /* Active tab color */
+            color: white;
+        }
+        .active {
+            display: block; /* Show active tab */
         }
     </style>
 </head>
 <body>
     <h1>Calibration Information</h1>
-    <div class="info">
-        <strong>Last Calibration Date:</strong> <span id="calibration-date">2024-10-01</span>
+    
+    <div>
+        <button class="tab-button active" onclick="openTab('tab1')">Calibration Info</button>
+        <button class="tab-button" onclick="openTab('tab2')">Another Tab</button>
     </div>
-    <div class="info">
-        <strong>Next Calibration Due:</strong> <span id="next-calibration-date">2025-10-01</span>
+
+    <div id="tab1" class="tab active">
+        <div class="info">
+            <strong>Last Calibration Date:</strong> <span id="calibration-date">2024-10-01</span>
+        </div>
+        <div class="info">
+            <strong>Next Calibration Due:</strong> <span id="next-calibration-date">2025-10-01</span>
+        </div>
     </div>
+
+    <div id="tab2" class="tab">
+        <h2>Content for Another Tab</h2>
+        <p>This is where you can put additional information or features.</p>
+    </div>
+
     <script>
         function fetchData() {
-            // Simulated data fetching; replace with actual logic if needed
-            const calibrationDate = "2024-10-01"; // This would come from your source
-            const nextCalibrationDate = "2025-10-01"; // This too
+            const calibrationDate = "2024-10-01"; // Simulated data
+            const nextCalibrationDate = "2025-10-01"; // Simulated data
 
             document.getElementById('calibration-date').innerText = calibrationDate;
             document.getElementById('next-calibration-date').innerText = nextCalibrationDate;
+        }
+
+        function openTab(tabId) {
+            const tabs = document.querySelectorAll('.tab');
+            const buttons = document.querySelectorAll('.tab-button');
+
+            tabs.forEach(tab => {
+                tab.classList.remove('active'); // Hide all tabs
+            });
+            buttons.forEach(button => {
+                button.classList.remove('active'); // Remove active class from all buttons
+            });
+
+            document.getElementById(tabId).classList.add('active'); // Show the selected tab
+            event.currentTarget.classList.add('active'); // Highlight the active button
         }
 
         window.onload = fetchData;
