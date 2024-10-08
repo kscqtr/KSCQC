@@ -1,31 +1,33 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Excel Data Display</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
-</head>
-<body>
-    <h1>Excel Data</h1>
-    <div id="result"></div>
-    <script>
-        const filePath = 'https://raw.githubusercontent.com/JohnDen2/JohnDen2.github.io/main/1)%20Equipment%20master%20list%2020240820.xlsx'; // Raw URL to the Excel file
+const filePath = 'https://raw.githubusercontent.com/JohnDen2/JohnDen2.github.io/main/1)%20Equipment%20master%20list%2020240820.xlsx';
 
-        fetch(filePath)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
+fetch(filePath)
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.arrayBuffer();
+    })
+    .then(data => {
+        const workbook = XLSX.read(data, { type: 'array' });
+        const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+        const cellValue = firstSheet['E3'];
+
+        let displayValue;
+        if (cellValue) {
+            if (cellValue.t === 'n') { // Check if the cell is a number
+                displayValue = cellValue.v; // Raw number
+                // If it's a date, convert it
+                const date = XLSX.SSF.parse_date_code(displayValue);
+                if (date) {
+                    displayValue = new Date(date.y, date.m - 1, date.d).toLocaleDateString();
                 }
-                return response.arrayBuffer(); // Read the file as an ArrayBuffer
-            })
-            .then(data => {
-                const workbook = XLSX.read(data, { type: 'array' });
-                const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
-                const cellValue = firstSheet['E3'] ? firstSheet['E3'].v : 'Cell E3 does not exist'; // Check if E3 exists
-                document.getElementById('result').innerText = cellValue;
-            })
-            .catch(error => console.error('Error loading file:', error));
-    </script>
-</body>
-</html>
+            } else {
+                displayValue = cellValue.v; // Non-numeric value
+            }
+        } else {
+            displayValue = 'Cell E3 does not exist';
+        }
+
+        document.getElementById('result').innerText = displayValue;
+    })
+    .catch(error => console.error('Error loading file:', error));
