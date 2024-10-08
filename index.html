@@ -10,14 +10,19 @@
     <h1>Excel Data</h1>
     <div id="result"></div>
     <script>
-        const filePath = 'https://github.com/JohnDen2/JohnDen2.github.io/raw/refs/heads/main/1)%20Equipment%20master%20list%2020240820.xlsx'; // Path to your uploaded Excel file
+        const filePath = 'https://raw.githubusercontent.com/JohnDen2/JohnDen2.github.io/main/1)%20Equipment%20master%20list%2020240820.xlsx'; // Raw URL to the Excel file
 
         fetch(filePath)
-            .then(response => response.arrayBuffer())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.arrayBuffer(); // Read the file as an ArrayBuffer
+            })
             .then(data => {
                 const workbook = XLSX.read(data, { type: 'array' });
                 const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
-                const cellValue = firstSheet['E3'].v; // Change 'A1' to your desired cell
+                const cellValue = firstSheet['E3'] ? firstSheet['E3'].v : 'Cell E3 does not exist'; // Check if E3 exists
                 document.getElementById('result').innerText = cellValue;
             })
             .catch(error => console.error('Error loading file:', error));
