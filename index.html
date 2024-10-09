@@ -7,7 +7,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
 </head>
 <body>
-    <h1 id="page-title">Excel Data</h1> <!-- Default title -->
+    <h1>Excel Data</h1> <!-- Static title -->
     <div id="result"></div>
     <script>
         const fileId = '1TJVnaaskSayy8CHQRQOwzTs3NPNZBHcI'; // Replace with your actual file ID
@@ -50,9 +50,6 @@
                 const calAgent = firstSheet[calAgentCell] ? firstSheet[calAgentCell].v : 'Cal. Agent not found';
                 const location = firstSheet[locationCell] ? firstSheet[locationCell].v : 'Location not found';
                 const reportNo = firstSheet[reportNoCell] ? firstSheet[reportNoCell].v : 'Report No. not found';
-
-                // Set the page title dynamically
-                document.getElementById('page-title').innerText = title;
 
                 // Display the results
                 const result = `
