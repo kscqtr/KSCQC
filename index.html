@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Excel Data Display</title>
+    <title id="page-title">Excel Data</title> <!-- Dynamic title will be set in JavaScript -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
 </head>
 <body>
-    <h1>Excel Data</h1> <!-- Static title -->
+    <h1 id="dynamic-title">Excel Data</h1> <!-- Placeholder for the title -->
     <div id="result"></div>
     <script>
         const fileId = '1TJVnaaskSayy8CHQRQOwzTs3NPNZBHcI'; // Replace with your actual file ID
@@ -25,6 +25,8 @@
                 const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
 
                 // Define the cells to check
+                const refNoCell = 'A3';
+                const titleCell = 'B3';
                 const modelCell = 'C3';
                 const serialCell = 'D3';
                 const calDateCell = 'E3';
@@ -43,6 +45,8 @@
                 };
 
                 // Get the values
+                const refNo = firstSheet[refNoCell] ? firstSheet[refNoCell].v : 'Ref. No. not found';
+                const title = firstSheet[titleCell] ? firstSheet[titleCell].v : 'Title not found';
                 const modelNumber = firstSheet[modelCell] ? firstSheet[modelCell].v : 'Model Number not found';
                 const serialNumber = firstSheet[serialCell] ? firstSheet[serialCell].v : 'Serial Number not found';
                 const calDate = formatDate(firstSheet[calDateCell]);
@@ -51,8 +55,13 @@
                 const location = firstSheet[locationCell] ? firstSheet[locationCell].v : 'Location not found';
                 const reportNo = firstSheet[reportNoCell] ? firstSheet[reportNoCell].v : 'Report No. not found';
 
+                // Set the page title dynamically
+                document.title = title;
+                document.getElementById('dynamic-title').innerText = title;
+
                 // Display the results
                 const result = `
+                    <strong>Ref. No.:</strong> ${refNo} <br>
                     <strong>Model Number:</strong> ${modelNumber} <br>
                     <strong>Serial Number:</strong> ${serialNumber} <br>
                     <strong>Cal. Date:</strong> ${calDate} <br>
