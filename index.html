@@ -7,7 +7,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
 </head>
 <body>
-    <h1>Excel Data</h1>
+    <h1 id="page-title">Excel Data</h1> <!-- Default title -->
     <div id="result"></div>
     <script>
         const fileId = '1TJVnaaskSayy8CHQRQOwzTs3NPNZBHcI'; // Replace with your actual file ID
@@ -29,6 +29,10 @@
                 const modelCell = 'C3';
                 const serialCell = 'D3';
                 const calDateCell = 'E3';
+                const dueDateCell = 'F3';
+                const calAgentCell = 'G3';
+                const locationCell = 'H3';
+                const reportNoCell = 'I3';
 
                 // Function to format the date
                 const formatDate = (cell) => {
@@ -46,13 +50,24 @@
                 const modelNumber = firstSheet[modelCell] ? firstSheet[modelCell].v : 'Model Number not found';
                 const serialNumber = firstSheet[serialCell] ? firstSheet[serialCell].v : 'Serial Number not found';
                 const calDate = formatDate(firstSheet[calDateCell]);
+                const dueDate = formatDate(firstSheet[dueDateCell]);
+                const calAgent = firstSheet[calAgentCell] ? firstSheet[calAgentCell].v : 'Cal. Agent not found';
+                const location = firstSheet[locationCell] ? firstSheet[locationCell].v : 'Location not found';
+                const reportNo = firstSheet[reportNoCell] ? firstSheet[reportNoCell].v : 'Report No. not found';
+
+                // Set the page title dynamically
+                document.getElementById('page-title').innerText = title;
 
                 // Display the results
                 const result = `
                     Title: ${title} <br>
-                    Model Number: ${modelNumber} <br>
-                    Serial Number: ${serialNumber} <br>
-                    Cal. Date: ${calDate}
+                    <strong>Model Number:</strong> ${modelNumber} <br>
+                    <strong>Serial Number:</strong> ${serialNumber} <br>
+                    Cal. Date: ${calDate} <br>
+                    Due Date: ${dueDate} <br>
+                    Cal. Agent: ${calAgent} <br>
+                    Location: ${location} <br>
+                    Report No.: ${reportNo}
                 `;
 
                 document.getElementById('result').innerHTML = result;
