@@ -10,7 +10,8 @@
     <h1>Excel Data</h1>
     <div id="result"></div>
     <script>
-        const filePath = 'https://raw.githubusercontent.com/JohnDen2/JohnDen2.github.io/main/1)%20Equipment%20master%20list%2020240820.xlsx';
+        const fileId = '1TJVnaaskSayy8CHQRQOwzTs3NPNZBHcI'; // Replace with your actual file ID
+        const filePath = `https://drive.google.com/uc?export=download&id=${fileId}`;
 
         fetch(filePath)
             .then(response => {
