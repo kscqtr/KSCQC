@@ -25,7 +25,6 @@
                 const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
 
                 // Define the cells to check
-                const titleCell = 'B3';
                 const modelCell = 'C3';
                 const serialCell = 'D3';
                 const calDateCell = 'E3';
@@ -44,7 +43,6 @@
                 };
 
                 // Get the values
-                const title = firstSheet[titleCell] ? firstSheet[titleCell].v : 'Title not found';
                 const modelNumber = firstSheet[modelCell] ? firstSheet[modelCell].v : 'Model Number not found';
                 const serialNumber = firstSheet[serialCell] ? firstSheet[serialCell].v : 'Serial Number not found';
                 const calDate = formatDate(firstSheet[calDateCell]);
@@ -58,7 +56,6 @@
 
                 // Display the results
                 const result = `
-                    <strong>Title:</strong> ${title} <br>
                     <strong>Model Number:</strong> ${modelNumber} <br>
                     <strong>Serial Number:</strong> ${serialNumber} <br>
                     <strong>Cal. Date:</strong> ${calDate} <br>
