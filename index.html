@@ -7,11 +7,20 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
 </head>
 <body>
-    <h1 id="page-title">Excel Data</h1> <!-- Title will be set dynamically -->
+    <h1 id="page-title">Excel Data</h1> <!-- Static title -->
     <div id="result"></div>
     <script>
         const fileId = '1TJVnaaskSayy8CHQRQOwzTs3NPNZBHcI'; // Replace with your actual file ID
         const filePath = `https://docs.google.com/spreadsheets/d/${fileId}/export?format=xlsx&t=${new Date().getTime()}`;
+
+        // Function to get query parameters from the URL
+        const getQueryParam = (param) => {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        };
+
+        // Get the row number from the query parameter (default to 3 if not provided)
+        const rowNumber = parseInt(getQueryParam('row')) || 3; // Default to 3 if not specified
 
         fetch(filePath)
             .then(response => {
@@ -24,16 +33,16 @@
                 const workbook = XLSX.read(data, { type: 'array' });
                 const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
 
-                // Define the cells to check
-                const refNoCell = 'A3';
-                const modelCell = 'C3';
-                const serialCell = 'D3';
-                const calDateCell = 'E3';
-                const dueDateCell = 'F3';
-                const calAgentCell = 'G3';
-                const locationCell = 'H3';
-                const reportNoCell = 'I3';
-                const titleCell = 'B3'; // Cell for title
+                // Define the cells based on the selected row
+                const refNoCell = `A${rowNumber}`;
+                const modelCell = `C${rowNumber}`;
+                const serialCell = `D${rowNumber}`;
+                const calDateCell = `E${rowNumber}`;
+                const dueDateCell = `F${rowNumber}`;
+                const calAgentCell = `G${rowNumber}`;
+                const locationCell = `H${rowNumber}`;
+                const reportNoCell = `I${rowNumber}`;
+                const titleCell = `B${rowNumber}`; // Cell for title
 
                 // Function to format the date as dd/mm/yy
                 const formatDate = (cell) => {
@@ -57,7 +66,7 @@
                 const calAgent = firstSheet[calAgentCell] ? firstSheet[calAgentCell].v : 'Cal. Agent not found';
                 const location = firstSheet[locationCell] ? firstSheet[locationCell].v : 'Location not found';
                 const reportNo = firstSheet[reportNoCell] ? firstSheet[reportNoCell].v : 'Report No. not found';
-                const title = firstSheet[titleCell] ? firstSheet[titleCell].v : 'Default Title'; // Get title from B3
+                const title = firstSheet[titleCell] ? firstSheet[titleCell].v : 'Default Title'; // Get title from B row
 
                 // Set the page title dynamically
                 document.title = title; // Set the page title
