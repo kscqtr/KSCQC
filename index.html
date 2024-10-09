@@ -36,11 +36,9 @@
 
                 // Function to format the date
                 const formatDate = (cell) => {
-                    if (cell && cell.t === 'n') { // Check if the cell is a number
-                        if (cell.z) { // If the cell has a number format (e.g., date format)
-                            const date = XLSX.SSF.parse_date_code(cell.v);
-                            return new Date(date.y, date.m - 1, date.d).toLocaleDateString();
-                        }
+                    if (cell && cell.t === 'n' && cell.v) { // Check if the cell is a number and has a value
+                        const date = XLSX.SSF.parse_date_code(cell.v);
+                        return new Date(date.y, date.m - 1, date.d).toLocaleDateString();
                     }
                     return 'Invalid Date';
                 };
@@ -60,14 +58,14 @@
 
                 // Display the results
                 const result = `
-                    Title: ${title} <br>
+                    <strong>Title:</strong> ${title} <br>
                     <strong>Model Number:</strong> ${modelNumber} <br>
                     <strong>Serial Number:</strong> ${serialNumber} <br>
-                    Cal. Date: ${calDate} <br>
-                    Due Date: ${dueDate} <br>
-                    Cal. Agent: ${calAgent} <br>
-                    Location: ${location} <br>
-                    Report No.: ${reportNo}
+                    <strong>Cal. Date:</strong> ${calDate} <br>
+                    <strong>Due Date:</strong> ${dueDate} <br>
+                    <strong>Cal. Agent:</strong> ${calAgent} <br>
+                    <strong>Location:</strong> ${location} <br>
+                    <strong>Report No.:</strong> ${reportNo}
                 `;
 
                 document.getElementById('result').innerHTML = result;
