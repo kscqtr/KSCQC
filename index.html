@@ -11,12 +11,12 @@
     <div id="result"></div>
     <script>
         const fileId = '1TJVnaaskSayy8CHQRQOwzTs3NPNZBHcI'; // Replace with your actual file ID
-        const filePath = `https://drive.google.com/uc?export=download&id=${fileId}&t=${new Date().getTime()}`;
+        const filePath = `https://docs.google.com/spreadsheets/d/${fileId}/export?format=xlsx&t=${new Date().getTime()}`;
 
         fetch(filePath)
             .then(response => {
                 if (!response.ok) {
-                    throw new Error('Network response was not ok');
+                    throw new Error(`Network response was not ok: ${response.status} ${response.statusText}`);
                 }
                 return response.arrayBuffer();
             })
@@ -56,7 +56,7 @@
             })
             .catch(error => {
                 console.error('Error loading file:', error);
-                document.getElementById('result').innerText = 'Error loading file.';
+                document.getElementById('result').innerText = `Error loading file: ${error.message}`;
             });
     </script>
 </body>
