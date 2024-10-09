@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="page-title">Excel Data</title> <!-- Dynamic title will be set in JavaScript -->
+    <title>Excel Data Display</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
 </head>
 <body>
-    <h1 id="dynamic-title">Excel Data</h1> <!-- Placeholder for the title -->
+    <h1>Excel Data</h1> <!-- Static title -->
     <div id="result"></div>
     <script>
         const fileId = '1TJVnaaskSayy8CHQRQOwzTs3NPNZBHcI'; // Replace with your actual file ID
@@ -26,7 +26,6 @@
 
                 // Define the cells to check
                 const refNoCell = 'A3';
-                const titleCell = 'B3';
                 const modelCell = 'C3';
                 const serialCell = 'D3';
                 const calDateCell = 'E3';
@@ -35,18 +34,21 @@
                 const locationCell = 'H3';
                 const reportNoCell = 'I3';
 
-                // Function to format the date
+                // Function to format the date as dd/mm/yy
                 const formatDate = (cell) => {
                     if (cell && cell.t === 'n' && cell.v) { // Check if the cell is a number and has a value
                         const date = XLSX.SSF.parse_date_code(cell.v);
-                        return new Date(date.y, date.m - 1, date.d).toLocaleDateString();
+                        // Format date to dd/mm/yy
+                        const day = String(date.d).padStart(2, '0');
+                        const month = String(date.m).padStart(2, '0'); // month is zero-based
+                        const year = String(date.y).slice(-2); // Get last two digits of the year
+                        return `${day}/${month}/${year}`;
                     }
                     return 'Invalid Date';
                 };
 
                 // Get the values
                 const refNo = firstSheet[refNoCell] ? firstSheet[refNoCell].v : 'Ref. No. not found';
-                const title = firstSheet[titleCell] ? firstSheet[titleCell].v : 'Title not found';
                 const modelNumber = firstSheet[modelCell] ? firstSheet[modelCell].v : 'Model Number not found';
                 const serialNumber = firstSheet[serialCell] ? firstSheet[serialCell].v : 'Serial Number not found';
                 const calDate = formatDate(firstSheet[calDateCell]);
@@ -54,10 +56,6 @@
                 const calAgent = firstSheet[calAgentCell] ? firstSheet[calAgentCell].v : 'Cal. Agent not found';
                 const location = firstSheet[locationCell] ? firstSheet[locationCell].v : 'Location not found';
                 const reportNo = firstSheet[reportNoCell] ? firstSheet[reportNoCell].v : 'Report No. not found';
-
-                // Set the page title dynamically
-                document.title = title;
-                document.getElementById('dynamic-title').innerText = title;
 
                 // Display the results
                 const result = `
