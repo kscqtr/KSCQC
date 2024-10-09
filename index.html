@@ -25,34 +25,37 @@
                 const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
 
                 // Define the cells to check
-                const cellsToCheck = ['E3', 'F3', 'G3'];
-                let displayValues = [];
+                const titleCell = 'B3';
+                const modelCell = 'C3';
+                const serialCell = 'D3';
+                const calDateCell = 'E3';
 
-                cellsToCheck.forEach(cell => {
-                    const cellValue = firstSheet[cell];
-                    let valueToDisplay;
-
-                    if (cellValue) {
-                        if (cellValue.t === 'n') { // Check if the cell is a number (this includes dates)
-                            valueToDisplay = cellValue.v; // Raw number
-                            // Check if the number is a date
-                            if (cellValue.z) { // If the cell has a number format (e.g., date format)
-                                const date = XLSX.SSF.parse_date_code(cellValue.v);
-                                valueToDisplay = new Date(date.y, date.m - 1, date.d).toLocaleDateString();
-                            }
-                        } else if (cellValue.t === 's') { // Check if the cell is a string
-                            valueToDisplay = cellValue.v; // Non-numeric value
-                        } else {
-                            valueToDisplay = 'Unsupported cell type';
+                // Function to format the date
+                const formatDate = (cell) => {
+                    if (cell && cell.t === 'n') { // Check if the cell is a number
+                        if (cell.z) { // If the cell has a number format (e.g., date format)
+                            const date = XLSX.SSF.parse_date_code(cell.v);
+                            return new Date(date.y, date.m - 1, date.d).toLocaleDateString();
                         }
-                    } else {
-                        valueToDisplay = `Cell ${cell} does not exist`;
                     }
+                    return 'Invalid Date';
+                };
 
-                    displayValues.push(`Cell ${cell}: ${valueToDisplay}`);
-                });
+                // Get the values
+                const title = firstSheet[titleCell] ? firstSheet[titleCell].v : 'Title not found';
+                const modelNumber = firstSheet[modelCell] ? firstSheet[modelCell].v : 'Model Number not found';
+                const serialNumber = firstSheet[serialCell] ? firstSheet[serialCell].v : 'Serial Number not found';
+                const calDate = formatDate(firstSheet[calDateCell]);
 
-                document.getElementById('result').innerText = displayValues.join('\n');
+                // Display the results
+                const result = `
+                    Title: ${title} <br>
+                    Model Number: ${modelNumber} <br>
+                    Serial Number: ${serialNumber} <br>
+                    Cal. Date: ${calDate}
+                `;
+
+                document.getElementById('result').innerHTML = result;
             })
             .catch(error => {
                 console.error('Error loading file:', error);
