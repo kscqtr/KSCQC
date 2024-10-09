@@ -11,7 +11,7 @@
     <div id="result"></div>
     <script>
         const fileId = '1TJVnaaskSayy8CHQRQOwzTs3NPNZBHcI'; // Replace with your actual file ID
-        const filePath = `https://drive.google.com/uc?export=download&id=${fileId}`;
+        const filePath = `https://drive.google.com/uc?export=download&id=${fileId}&t=${new Date().getTime()}`;
 
         fetch(filePath)
             .then(response => {
@@ -23,27 +23,41 @@
             .then(data => {
                 const workbook = XLSX.read(data, { type: 'array' });
                 const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
-                const cellValue = firstSheet['E3'];
 
-                let displayValue;
-                if (cellValue) {
-                    if (cellValue.t === 'n') { // Check if the cell is a number
-                        displayValue = cellValue.v; // Raw number
-                        // If it's a date, convert it
-                        const date = XLSX.SSF.parse_date_code(displayValue);
-                        if (date) {
-                            displayValue = new Date(date.y, date.m - 1, date.d).toLocaleDateString();
+                // Define the cells to check
+                const cellsToCheck = ['E3', 'E4', 'E5'];
+                let displayValues = [];
+
+                cellsToCheck.forEach(cell => {
+                    const cellValue = firstSheet[cell];
+                    let valueToDisplay;
+
+                    if (cellValue) {
+                        if (cellValue.t === 'n') { // Check if the cell is a number (this includes dates)
+                            valueToDisplay = cellValue.v; // Raw number
+                            // Check if the number is a date
+                            if (cellValue.z) { // If the cell has a number format (e.g., date format)
+                                const date = XLSX.SSF.parse_date_code(cellValue.v);
+                                valueToDisplay = new Date(date.y, date.m - 1, date.d).toLocaleDateString();
+                            }
+                        } else if (cellValue.t === 's') { // Check if the cell is a string
+                            valueToDisplay = cellValue.v; // Non-numeric value
+                        } else {
+                            valueToDisplay = 'Unsupported cell type';
                         }
                     } else {
-                        displayValue = cellValue.v; // Non-numeric value
+                        valueToDisplay = `Cell ${cell} does not exist`;
                     }
-                } else {
-                    displayValue = 'Cell E3 does not exist';
-                }
 
-                document.getElementById('result').innerText = displayValue;
+                    displayValues.push(`Cell ${cell}: ${valueToDisplay}`);
+                });
+
+                document.getElementById('result').innerText = displayValues.join('\n');
             })
-            .catch(error => console.error('Error loading file:', error));
+            .catch(error => {
+                console.error('Error loading file:', error);
+                document.getElementById('result').innerText = 'Error loading file.';
+            });
     </script>
 </body>
 </html>
