@@ -3,7 +3,7 @@ name: Deploy HTML Page
 on:
   push:
     branches:
-      - main  # Change this to your default branch if different
+      - main
 
 jobs:
   build:
@@ -11,13 +11,17 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3  # Updated to v3
+        uses: actions/checkout@v3
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v3  # Updated to v3
-        with:
-          node-version: '20'  # Specify Node.js version 20
+      - name: List files
+        run: ls -R
+
+      - name: Show HTML file before modification
+        run: cat index.html
 
       - name: Create HTML with secret
         run: |
           sed -i 's|<EXCEL_FILE_URL>|${{ secrets.EXCEL_FILE_URL }}|g' index.html
+
+      - name: Show HTML file after modification
+        run: cat index.html
