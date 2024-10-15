@@ -24,4 +24,5 @@ jobs:
       - name: Create HTML with secret
         run: |
           # Replace the placeholder in your HTML with the secret URL
-          sed -i 's|<YOUR_PLACEHOLDER_FOR_URL>|${{ secrets.EXCEL_FILE_URL }}|g' path/to/your.html
+          sed -i 's|<EXCEL_FILE_URL>|${{ secrets.EXCEL_FILE_URL }}|g' public/index.html
+
