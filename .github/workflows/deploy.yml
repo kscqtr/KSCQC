@@ -18,11 +18,6 @@ jobs:
         with:
           node-version: '16'  # Specify the Node.js version if needed
 
-      - name: Install dependencies
-        run: npm install # Run this if you have a package.json, otherwise skip this step
-
       - name: Create HTML with secret
         run: |
-          # Replace the placeholder in your HTML with the secret URL
-          sed -i 's|<EXCEL_FILE_URL>|${{ secrets.EXCEL_FILE_URL }}|g' public/index.html
-
+          sed -i 's|<EXCEL_FILE_URL>|${{ secrets.EXCEL_FILE_URL }}|g' path/to/your/index.html
