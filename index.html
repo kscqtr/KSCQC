@@ -9,8 +9,10 @@
 <body>
     <h1 id="page-title">Excel Data</h1> <!-- Static title -->
     <div id="result"></div>
+    <div id="loading" style="display: none;">Loading...</div> <!-- Loading indicator -->
+    
     <script>
-        const filePath = '<EXCEL_FILE_URL>';
+        const filePath = '<EXCEL_FILE_URL>'; // Replace this with your actual URL
 
         // Function to get query parameters from the URL
         const getQueryParam = (param) => {
@@ -19,7 +21,9 @@
         };
 
         // Get the row number from the query parameter (default to 3 if not provided)
-        const rowNumber = parseInt(getQueryParam('row')) || 3; // Default to 3 if not specified
+        const rowNumber = parseInt(getQueryParam('row')) || 3;
+
+        document.getElementById('loading').style.display = 'block'; // Show loading
 
         fetch(filePath)
             .then(response => {
@@ -41,16 +45,15 @@
                 const calAgentCell = `G${rowNumber}`;
                 const locationCell = `H${rowNumber}`;
                 const reportNoCell = `I${rowNumber}`;
-                const titleCell = `B${rowNumber}`; // Cell for title
+                const titleCell = `B${rowNumber}`;
 
                 // Function to format the date as dd/mm/yy
                 const formatDate = (cell) => {
-                    if (cell && cell.t === 'n' && cell.v) { // Check if the cell is a number and has a value
+                    if (cell && cell.t === 'n' && cell.v) {
                         const date = XLSX.SSF.parse_date_code(cell.v);
-                        // Format date to dd/mm/yy
                         const day = String(date.d).padStart(2, '0');
-                        const month = String(date.m).padStart(2, '0'); // month is zero-based
-                        const year = String(date.y).slice(-2); // Get last two digits of the year
+                        const month = String(date.m).padStart(2, '0');
+                        const year = String(date.y).slice(-2);
                         return `${day}/${month}/${year}`;
                     }
                     return 'Invalid Date';
@@ -65,11 +68,11 @@
                 const calAgent = firstSheet[calAgentCell] ? firstSheet[calAgentCell].v : 'Cal. Agent not found';
                 const location = firstSheet[locationCell] ? firstSheet[locationCell].v : 'Location not found';
                 const reportNo = firstSheet[reportNoCell] ? firstSheet[reportNoCell].v : 'Report No. not found';
-                const title = firstSheet[titleCell] ? firstSheet[titleCell].v : 'Default Title'; // Get title from B row
+                const title = firstSheet[titleCell] ? firstSheet[titleCell].v : 'Default Title';
 
                 // Set the page title dynamically
-                document.title = title; // Set the page title
-                document.getElementById('page-title').innerText = title; // Set the header text
+                document.title = title;
+                document.getElementById('page-title').innerText = title;
 
                 // Display the results
                 const result = `
@@ -84,10 +87,12 @@
                 `;
 
                 document.getElementById('result').innerHTML = result;
+                document.getElementById('loading').style.display = 'none'; // Hide loading
             })
             .catch(error => {
                 console.error('Error loading file:', error);
                 document.getElementById('result').innerText = `Error loading file: ${error.message}`;
+                document.getElementById('loading').style.display = 'none'; // Hide loading
             });
     </script>
 </body>
