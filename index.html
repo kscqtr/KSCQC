@@ -10,8 +10,7 @@
     <h1 id="page-title">Excel Data</h1> <!-- Static title -->
     <div id="result"></div>
     <script>
-        // Replace with your actual OneDrive direct download link
-        const filePath = 'https://keystonecablesg-my.sharepoint.com/_layouts/15/download.aspx?UniqueId=EVwdy_qdu35Mogo4mRFgP4wBP4J6VvxO4bvx63LnTeqseg';
+        const filePath = 'https://keystonecablesg-my.sharepoint.com/:u:/g/personal/john_deniola_keystone-cable_com/EVwdy_qdu35Mogo4mRFgP4wBP4J6VvxO4bvx63LnTeqseg?download=1';
 
         // Function to get query parameters from the URL
         const getQueryParam = (param) => {
@@ -33,20 +32,16 @@
                 const workbook = XLSX.read(data, { type: 'array' });
                 const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
 
-                // Get the last row number from the sheet
-                const numberOfRows = firstSheet['!ref'].split(':')[1].replace(/[^\d]/g, '');
-                const validRowNumber = Math.min(rowNumber, numberOfRows); // Ensure row number is within bounds
-
                 // Define the cells based on the selected row
-                const refNoCell = `A${validRowNumber}`;
-                const modelCell = `C${validRowNumber}`;
-                const serialCell = `D${validRowNumber}`;
-                const calDateCell = `E${validRowNumber}`;
-                const dueDateCell = `F${validRowNumber}`;
-                const calAgentCell = `G${validRowNumber}`;
-                const locationCell = `H${validRowNumber}`;
-                const reportNoCell = `I${validRowNumber}`;
-                const titleCell = `B${validRowNumber}`; // Cell for title
+                const refNoCell = `A${rowNumber}`;
+                const modelCell = `C${rowNumber}`;
+                const serialCell = `D${rowNumber}`;
+                const calDateCell = `E${rowNumber}`;
+                const dueDateCell = `F${rowNumber}`;
+                const calAgentCell = `G${rowNumber}`;
+                const locationCell = `H${rowNumber}`;
+                const reportNoCell = `I${rowNumber}`;
+                const titleCell = `B${rowNumber}`; // Cell for title
 
                 // Function to format the date as dd/mm/yy
                 const formatDate = (cell) => {
@@ -54,23 +49,23 @@
                         const date = XLSX.SSF.parse_date_code(cell.v);
                         // Format date to dd/mm/yy
                         const day = String(date.d).padStart(2, '0');
-                        const month = String(date.m + 1).padStart(2, '0'); // month is zero-based
+                        const month = String(date.m).padStart(2, '0'); // month is zero-based
                         const year = String(date.y).slice(-2); // Get last two digits of the year
                         return `${day}/${month}/${year}`;
                     }
                     return 'Invalid Date';
                 };
 
-                // Get the values with optional chaining
-                const refNo = firstSheet[refNoCell]?.v || 'Ref. No. not found';
-                const modelNumber = firstSheet[modelCell]?.v || 'Model Number not found';
-                const serialNumber = firstSheet[serialCell]?.v || 'Serial Number not found';
+                // Get the values
+                const refNo = firstSheet[refNoCell] ? firstSheet[refNoCell].v : 'Ref. No. not found';
+                const modelNumber = firstSheet[modelCell] ? firstSheet[modelCell].v : 'Model Number not found';
+                const serialNumber = firstSheet[serialCell] ? firstSheet[serialCell].v : 'Serial Number not found';
                 const calDate = formatDate(firstSheet[calDateCell]);
                 const dueDate = formatDate(firstSheet[dueDateCell]);
-                const calAgent = firstSheet[calAgentCell]?.v || 'Cal. Agent not found';
-                const location = firstSheet[locationCell]?.v || 'Location not found';
-                const reportNo = firstSheet[reportNoCell]?.v || 'Report No. not found';
-                const title = firstSheet[titleCell]?.v || 'Default Title'; // Get title from B row
+                const calAgent = firstSheet[calAgentCell] ? firstSheet[calAgentCell].v : 'Cal. Agent not found';
+                const location = firstSheet[locationCell] ? firstSheet[locationCell].v : 'Location not found';
+                const reportNo = firstSheet[reportNoCell] ? firstSheet[reportNoCell].v : 'Report No. not found';
+                const title = firstSheet[titleCell] ? firstSheet[titleCell].v : 'Default Title'; // Get title from B row
 
                 // Set the page title dynamically
                 document.title = title; // Set the page title
