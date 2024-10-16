@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Excel Data Display</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+</head>
+<body>
+    <h1 id="page-title">Excel Data</h1> <!-- Static title -->
+    <div id="result"></div>
+    <div id="loading" style="display: none;">Loading...</div> <!-- Loading indicator -->
+    
+    <script>
+        const filePath = 'https://keystonecablesg-my.sharepoint.com/personal/john_deniola_keystone-cable_com/_layouts/15/download.aspx?share=EVwdy_qdu35Mogo4mRFgP4wBP4J6VvxO4bvx63LnTeqseg'; // Replace this with your actual URL
+
+        // Function to get query parameters from the URL
+        const getQueryParam = (param) => {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        };
+
+        // Get the row number from the query parameter (default to 3 if not provided)
+        const rowNumber = parseInt(getQueryParam('row')) || 3;
+
+        document.getElementById('loading').style.display = 'block'; // Show loading
+
+        fetch(filePath)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Network response was not ok: ${response.status} ${response.statusText}`);
+                }
+                return response.arrayBuffer();
+            })
+            .then(data => {
+                const workbook = XLSX.read(data, { type: 'array' });
+                const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+
+                // Define the cells based on the selected row
+                const refNoCell = `A${rowNumber}`;
+                const modelCell = `C${rowNumber}`;
+                const serialCell = `D${rowNumber}`;
+                const calDateCell = `E${rowNumber}`;
+                const dueDateCell = `F${rowNumber}`;
+                const calAgentCell = `G${rowNumber}`;
+                const locationCell = `H${rowNumber}`;
+                const reportNoCell = `I${rowNumber}`;
+                const titleCell = `B${rowNumber}`;
+
+                // Function to format the date as dd/mm/yy
+                const formatDate = (cell) => {
+                    if (cell && cell.t === 'n' && cell.v) {
+                        const date = XLSX.SSF.parse_date_code(cell.v);
+                        const day = String(date.d).padStart(2, '0');
+                        const month = String(date.m).padStart(2, '0');
+                        const year = String(date.y).slice(-2);
+                        return `${day}/${month}/${year}`;
+                    }
+                    return 'Invalid Date';
+                };
+
+                // Get the values
+                const refNo = firstSheet[refNoCell] ? firstSheet[refNoCell].v : 'Ref. No. not found';
+                const modelNumber = firstSheet[modelCell] ? firstSheet[modelCell].v : 'Model Number not found';
+                const serialNumber = firstSheet[serialCell] ? firstSheet[serialCell].v : 'Serial Number not found';
+                const calDate = formatDate(firstSheet[calDateCell]);
+                const dueDate = formatDate(firstSheet[dueDateCell]);
+                const calAgent = firstSheet[calAgentCell] ? firstSheet[calAgentCell].v : 'Cal. Agent not found';
+                const location = firstSheet[locationCell] ? firstSheet[locationCell].v : 'Location not found';
+                const reportNo = firstSheet[reportNoCell] ? firstSheet[reportNoCell].v : 'Report No. not found';
+                const title = firstSheet[titleCell] ? firstSheet[titleCell].v : 'Default Title';
+
+                // Set the page title dynamically
+                document.title = title;
+                document.getElementById('page-title').innerText = title;
+
+                // Display the results
+                const result = `
+                    <strong>Ref. No.:</strong> ${refNo} <br>
+                    <strong>Model Number:</strong> ${modelNumber} <br>
+                    <strong>Serial Number:</strong> ${serialNumber} <br>
+                    <strong>Cal. Date:</strong> ${calDate} <br>
+                    <strong>Due Date:</strong> ${dueDate} <br>
+                    <strong>Cal. Agent:</strong> ${calAgent} <br>
+                    <strong>Location:</strong> ${location} <br>
+                    <strong>Report No.:</strong> ${reportNo}
+                `;
+
+                document.getElementById('result').innerHTML = result;
+                document.getElementById('loading').style.display = 'none'; // Hide loading
+            })
+            .catch(error => {
+                console.error('Error loading file:', error);
+                document.getElementById('result').innerText = `Error loading file: ${error.message}`;
+                document.getElementById('loading').style.display = 'none'; // Hide loading
+            });
+    </script>
+</body>
+</html>
